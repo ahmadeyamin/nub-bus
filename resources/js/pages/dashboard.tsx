@@ -105,7 +105,7 @@ export default function Dashboard({ stats, recent_buses, driver_stats, student_s
     return (
         <>
             <Head title="Dashboard" />
-            <div className="max-w-5xl mx-auto px-4 py-8 space-y-8">
+            <div className="max-w-5xl mx-auto w-full space-y-8">
 
                 {/* ── Welcome ── */}
                 <div>

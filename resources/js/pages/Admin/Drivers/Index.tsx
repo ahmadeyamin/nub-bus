@@ -43,7 +43,7 @@ export default function AdminDrivers({ drivers }: PageProps<{ drivers: DriverTyp
     return (
         <>
             <Head title="Manage Drivers" />
-            <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
+            <div className="max-w-4xl mx-auto w-full space-y-8">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Drivers</h1>
                     <p className="text-sm text-gray-500 mt-1">{drivers.length} drivers registered</p>

@@ -103,7 +103,7 @@ export default function AdminDriverShow({ driver, bus }: PageProps<{ driver: Dri
         <>
             <Head title={`Driver — ${driver.name}`} />
 
-            <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
+            <div className="max-w-3xl mx-auto w-full space-y-6">
 
                 {/* Back */}
                 <Link href={driversIndex.url()} className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors">

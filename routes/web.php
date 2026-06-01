@@ -30,6 +30,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Buses
         Route::get('buses', [BusController::class, 'index'])->name('buses.index');
         Route::post('buses', [BusController::class, 'store'])->name('buses.store');
+        Route::get('buses/{bus}', [BusController::class, 'show'])->name('buses.show');
+        Route::put('buses/{bus}', [BusController::class, 'update'])->name('buses.update');
         Route::delete('buses/{bus}', [BusController::class, 'destroy'])->name('buses.destroy');
         Route::post('buses/{bus}/toggle-active', [BusController::class, 'toggleActive'])->name('buses.toggle-active');
 

@@ -150,7 +150,7 @@ export default function DriverDashboard({ bus, stats }: PageProps<{ bus: BusType
         <>
             <Head title="Driver Panel" />
 
-            <div className="max-w-xl mx-auto px-4 py-6 space-y-5">
+            <div className="max-w-xl mx-auto w-full space-y-5">
 
                 {/* ── Hero bus card ─────────────────────────────────────── */}
                 <div
