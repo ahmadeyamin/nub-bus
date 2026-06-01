@@ -3,6 +3,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { initializeTheme } from '@/hooks/use-appearance';
 import AppLayout from '@/layouts/app-layout';
+import AppFullLayout from '@/layouts/app/app-full-layout';
 import AuthLayout from '@/layouts/auth-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 
@@ -14,6 +15,10 @@ createInertiaApp({
         switch (true) {
             case name === 'welcome':
                 return null;
+            case name === 'Student/Dashboard':
+                return null; // Public page — no auth sidebar
+            case name === 'Admin/Routes/Show':
+                return AppFullLayout; // Map editor needs edge-to-edge
             case name.startsWith('auth/'):
                 return AuthLayout;
             case name.startsWith('settings/'):
