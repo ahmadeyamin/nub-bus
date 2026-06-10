@@ -21,6 +21,10 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             DefaultAdminSeeder::class,
+            ShyamoliToAirportRouteSeeder::class,
+            KonabariToAirportRouteSeeder::class,
+            MatuailToAirportRouteSeeder::class,
+            PaltanToAirportRouteSeeder::class,
         ]);
     }
 }

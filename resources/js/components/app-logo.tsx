@@ -8,7 +8,7 @@ export default function AppLogo() {
             </div>
             <div className="ml-1 grid flex-1 text-left text-sm">
                 <span className="mb-0.5 truncate leading-tight font-bold text-gray-900 dark:text-white">
-                    NUB Bus
+                    NUB Transit
                 </span>
                 <span className="text-[10px] text-gray-400 uppercase tracking-widest">
                     Tracking System

@@ -80,7 +80,7 @@ export function AppHeader() {
                         <Bus className="h-4 w-4 text-white" />
                     </div>
                     <div className="leading-tight">
-                        <div className="text-sm font-extrabold text-gray-900 dark:text-white tracking-tight">NUB Bus</div>
+                        <div className="text-sm font-extrabold text-gray-900 dark:text-white tracking-tight">NUB Transit</div>
                         <div className="text-[10px] text-gray-400 dark:text-gray-500 uppercase tracking-widest font-medium -mt-0.5">Tracking System</div>
                     </div>
                 </Link>

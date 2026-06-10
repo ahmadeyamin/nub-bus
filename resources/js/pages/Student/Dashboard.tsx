@@ -5,7 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import { useState, useMemo } from 'react';
 import L from 'leaflet';
 import { Bus, Clock, MapPin, Navigation } from 'lucide-react';
-import { dashboard } from '@/routes';
+import { dashboard, login } from '@/routes';
 
 // Fix Leaflet default marker icons
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -94,35 +94,46 @@ export default function StudentDashboard({ routes, buses }: PageProps<{ routes: 
                             <div className="bg-white/20 p-1.5 rounded-lg">
                                 <Bus className="h-5 w-5" />
                             </div>
-                            <span className="text-white/70 text-sm font-medium uppercase tracking-widest">NUB University</span>
+                            <span className="text-white/70 text-sm font-medium uppercase tracking-widest">NUB Transit</span>
                         </div>
-                        <h1 className="text-3xl font-extrabold tracking-tight">Live Bus Tracker</h1>
-                        <p className="text-indigo-200 mt-1 text-sm">Real-time university bus locations &amp; ETAs</p>
+                        <h1 className="text-3xl font-extrabold tracking-tight">Where's my bus?</h1>
+                        <p className="text-indigo-200 mt-1 text-sm">Pick your route and watch the bus move stop by stop in real time.</p>
                     </div>
-                    {auth?.user && (
+                    {auth?.user ? (
                         <Link href={dashboard.url()} className="text-white/70 text-sm hover:text-white transition-colors border border-white/20 px-3 py-1.5 rounded-lg hover:bg-white/10">
                             Dashboard →
+                        </Link>
+                    ) : (
+                        <Link href={login.url()} className="text-white/70 text-sm hover:text-white transition-colors border border-white/20 px-3 py-1.5 rounded-lg hover:bg-white/10">
+                            Login →
                         </Link>
                     )}
                 </div>
 
-                {/* Route selector tabs */}
-                <div className="max-w-6xl mx-auto mt-6 flex gap-2 overflow-x-auto pb-1">
-                    {routes.map(r => (
-                        <button
-                            key={r.id}
-                            onClick={() => setSelectedRouteId(r.id)}
-                            className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                                r.id === selectedRouteId
-                                    ? 'bg-white text-indigo-700 shadow-lg'
-                                    : 'bg-white/15 text-white/80 hover:bg-white/25'
-                            }`}
-                        >
-                            {r.name}
-                        </button>
-                    ))}
-                    {routes.length === 0 && (
+                {/* Route selector */}
+                <div className="max-w-6xl mx-auto mt-6">
+                    {routes.length === 0 ? (
                         <span className="text-white/50 text-sm italic">No routes configured yet.</span>
+                    ) : (
+                        <div className="relative inline-block w-full max-w-xs">
+                            <select
+                                value={selectedRouteId}
+                                onChange={e => setSelectedRouteId(Number(e.target.value))}
+                                className="w-full appearance-none bg-white/15 backdrop-blur-sm text-white text-sm font-medium px-4 py-2.5 pr-10 rounded-xl border border-white/25 cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/40 hover:bg-white/20 transition-colors"
+                                style={{ colorScheme: 'dark' }}
+                            >
+                                {routes.map(r => (
+                                    <option key={r.id} value={r.id} className="bg-indigo-900 text-white">
+                                        {r.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-white/70">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="m6 9 6 6 6-6" />
+                                </svg>
+                            </div>
+                        </div>
                     )}
                 </div>
             </div>
