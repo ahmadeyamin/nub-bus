@@ -93,12 +93,12 @@ interface DriverStats {
 }
 
 // ══════════════════════════════════════════════════════════════════════════
-export default function Dashboard({ stats, recent_buses, driver_stats, student_stats }: PageProps<{
+export default function Dashboard({ stats, recent_buses, driver_stats, student_stats }: {
     stats?: AdminStats;
     recent_buses?: RecentBus[];
     driver_stats?: DriverStats | null;
     student_stats?: { total_routes: number; active_buses: number };
-}>) {
+}) {
     const { auth } = usePage().props;
     const role = auth.user?.role;
 

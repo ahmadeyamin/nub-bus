@@ -31,6 +31,14 @@ class RouteController extends Controller
         return back();
     }
 
+    public function update(Request $request, BusRoute $route)
+    {
+        $request->validate(['name' => 'required|string|max:255']);
+        $route->update($request->only('name'));
+
+        return back();
+    }
+
     public function destroy(BusRoute $route)
     {
         $route->delete();

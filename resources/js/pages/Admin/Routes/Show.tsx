@@ -1,4 +1,3 @@
-import { PageProps } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { MapContainer, TileLayer, Polyline, useMapEvents } from 'react-leaflet';
@@ -11,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { store as stopsStore, destroy as stopsDestroy, update as stopsUpdate } from '@/routes/admin/stops';
-import { index as routesIndex } from '@/routes/admin/routes';
+import { index as routesIndex, update as routesUpdate } from '@/routes/admin/routes';
 
 // ── Numbered marker factory ────────────────────────────────────────────────
 function makeIcon(index: number, color = '#4f46e5') {
@@ -183,10 +182,27 @@ function StopRow({
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-export default function AdminRouteShow({ route }: PageProps<{ route: RouteType }>) {
+export default function AdminRouteShow({ route }: { route: RouteType }) {
     const [stops, setStops] = useState<Stop[]>(
         [...route.stops].sort((a, b) => a.order_index - b.order_index),
     );
+
+    const [editingName, setEditingName] = useState(false);
+    const [routeName, setRouteName] = useState(route.name);
+
+    useEffect(() => setRouteName(route.name), [route.name]);
+
+    const saveRouteName = () => {
+        if (!routeName.trim() || routeName.trim() === route.name) {
+            setEditingName(false);
+            setRouteName(route.name);
+            return;
+        }
+        router.put(routesUpdate.url({ route: route.id }), { name: routeName.trim() }, {
+            preserveScroll: true,
+            onSuccess: () => setEditingName(false),
+        });
+    };
 
     // Pending click: waiting for user to fill in name/minutes before saving
     const [pending, setPending] = useState<{ lat: number; lng: number } | null>(null);
@@ -290,7 +306,32 @@ export default function AdminRouteShow({ route }: PageProps<{ route: RouteType }
                         <ArrowLeft className="h-4 w-4" />
                     </Link>
                     <div>
-                        <h1 className="text-base font-bold text-gray-900 dark:text-white">{route.name}</h1>
+                        {!editingName ? (
+                            <div className="flex items-center gap-2 group mb-0.5">
+                                <h1 className="text-base font-bold text-gray-900 dark:text-white">{route.name}</h1>
+                                <button onClick={() => setEditingName(true)} className="p-1.5 -ml-1.5 rounded transition-opacity hover:bg-gray-100 dark:hover:bg-gray-800" title="Edit route name">
+                                    <Pencil className="h-3.5 w-3.5 text-gray-500" />
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="flex items-center gap-2 mb-0.5">
+                                <Input
+                                    value={routeName}
+                                    onChange={e => setRouteName(e.target.value)}
+                                    className="h-8 text-sm font-bold w-48"
+                                    autoFocus
+                                    onKeyDown={e => {
+                                        if (e.key === 'Enter') saveRouteName();
+                                        if (e.key === 'Escape') {
+                                            setEditingName(false);
+                                            setRouteName(route.name);
+                                        }
+                                    }}
+                                />
+                                <Button size="sm" onClick={saveRouteName} className="h-8 px-2.5">Save</Button>
+                                <Button size="sm" variant="ghost" onClick={() => { setEditingName(false); setRouteName(route.name); }} className="h-8 px-2.5">Cancel</Button>
+                            </div>
+                        )}
                         <p className="text-xs text-gray-400">{stops.length} stop{stops.length !== 1 ? 's' : ''} · Click map to add</p>
                     </div>
                 </div>

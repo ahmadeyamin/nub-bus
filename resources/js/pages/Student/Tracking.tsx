@@ -634,8 +634,10 @@ export default function Tracking({ routes = [], buses = [] }: TrackingProps) {
                         )}
                     </aside>
 
-                    {/* ── Leaflet Interactive Map ── */}
-                    <main style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+                    {/* ── Main Content Area ── */}
+                    <div style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
+                        {/* ── Leaflet Interactive Map ── */}
+                        <main style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
                         {selectedRoute && selectedRoute.stops.length > 0 ? (
                             <MapContainer
                                 center={mapCenter}
@@ -741,7 +743,6 @@ export default function Tracking({ routes = [], buses = [] }: TrackingProps) {
                             </div>
                         )}
                     </main>
-                </div>
 
                 {/* ── Active Running Trips Summary Grid Footer ── */}
                 <div style={{
@@ -808,6 +809,8 @@ export default function Tracking({ routes = [], buses = [] }: TrackingProps) {
                                 );
                             })
                         )}
+                    </div>
+                        </div>
                     </div>
                 </div>
             </div>

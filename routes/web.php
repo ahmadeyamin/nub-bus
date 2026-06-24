@@ -21,6 +21,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('routes', [RouteController::class, 'index'])->name('routes.index');
         Route::post('routes', [RouteController::class, 'store'])->name('routes.store');
         Route::get('routes/{route}', [RouteController::class, 'show'])->name('routes.show');
+        Route::put('routes/{route}', [RouteController::class, 'update'])->name('routes.update');
         Route::delete('routes/{route}', [RouteController::class, 'destroy'])->name('routes.destroy');
 
         // Stops
