@@ -10,6 +10,7 @@ use App\Http\Controllers\TrackingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [TrackingController::class, 'index'])->name('home');
+Route::get('/tracking', [TrackingController::class, 'live'])->name('tracking');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard');

@@ -1,5 +1,4 @@
 import { Head, Link, usePage } from '@inertiajs/react';
-import { PageProps } from '@/types';
 import {
     Bus,
     CheckCircle,
@@ -18,6 +17,7 @@ import { index as routesIndex } from '@/routes/admin/routes';
 import { index as busesIndex } from '@/routes/admin/buses';
 import { index as driversIndex } from '@/routes/admin/drivers';
 import { index as driverStatusIndex } from '@/routes/driver/status';
+import { tracking } from '@/routes';
 
 // ── Live timer ─────────────────────────────────────────────────────────────
 function useLiveTimer(startedAt: string | null, active: boolean): string {
@@ -99,7 +99,7 @@ export default function Dashboard({ stats, recent_buses, driver_stats, student_s
     driver_stats?: DriverStats | null;
     student_stats?: { total_routes: number; active_buses: number };
 }>) {
-    const { auth } = usePage<PageProps>().props;
+    const { auth } = usePage().props;
     const role = auth.user?.role;
 
     return (
@@ -309,7 +309,7 @@ function StudentDashboardContent({ stats }: { stats: { total_routes: number; act
                 <StatCard label="Buses Running" value={stats.active_buses} sub="live right now"
                     icon={Bus} gradient="linear-gradient(135deg,#059669,#047857)" />
             </div>
-            <Link href="/"
+            <Link href={tracking.url()}
                 className="flex items-center justify-center gap-2 w-full py-4 rounded-2xl font-bold text-white text-base shadow-lg shadow-indigo-500/20 hover:opacity-90 transition-opacity"
                 style={{ background: 'linear-gradient(135deg,#4f46e5,#7c3aed)' }}
             >

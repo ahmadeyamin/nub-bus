@@ -16,9 +16,12 @@ createInertiaApp({
             case name === 'welcome':
                 return null;
             case name === 'Student/Dashboard':
+            case name === 'Student/Tracking':
                 return null; // Public page — no auth sidebar
             case name === 'Admin/Routes/Show':
                 return AppFullLayout; // Map editor needs edge-to-edge
+            case name === 'auth/login':
+                return null; // Login page has its own full-page custom layout
             case name.startsWith('auth/'):
                 return AuthLayout;
             case name.startsWith('settings/'):

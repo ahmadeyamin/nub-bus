@@ -12,14 +12,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useInitials } from '@/hooks/use-initials';
 import { cn } from '@/lib/utils';
-import { dashboard } from '@/routes';
+import { dashboard, tracking } from '@/routes';
 import { index as routesIndex } from '@/routes/admin/routes';
 import { index as busesIndex } from '@/routes/admin/buses';
 import { index as driversIndex } from '@/routes/admin/drivers';
 import { index as driverStatusIndex } from '@/routes/driver/status';
 import { logout } from '@/routes';
 import { edit as profileEdit } from '@/routes/profile';
-import type { PageProps } from '@/types';
 
 import { useState } from 'react';
 
@@ -49,7 +48,7 @@ function NavLink({ href, children, icon: Icon }: { href: string; children: React
 }
 
 export function AppHeader() {
-    const { auth } = usePage<PageProps>().props;
+    const { auth } = usePage().props;
     const getInitials = useInitials();
     const role = auth.user?.role;
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -100,7 +99,7 @@ export function AppHeader() {
 
                 {/* Live tracking link */}
                 <Link
-                    href="/"
+                    href={tracking.url()}
                     className="hidden sm:flex items-center gap-1.5 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors border border-indigo-200 dark:border-indigo-800 px-3 py-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/20"
                 >
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
