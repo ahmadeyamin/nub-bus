@@ -10,11 +10,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Fortify\Contracts\PasskeyUser;
 use Laravel\Fortify\PasskeyAuthenticatable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
-#[Fillable(['name', 'email', 'password', 'role'])]
+#[Fillable(['name', 'email', 'password', 'role', 'avatar', 'nid_number', 'phone', 'profile_locked'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements PasskeyUser
 {
@@ -32,7 +33,20 @@ class User extends Authenticatable implements PasskeyUser
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
+            'profile_locked' => 'boolean',
         ];
+    }
+
+    /**
+     * Get the full public URL of the avatar.
+     */
+    public function getAvatarUrlAttribute(): ?string
+    {
+        if (! $this->avatar) {
+            return null;
+        }
+
+        return Storage::disk('public')->url($this->avatar);
     }
 
     public function bus(): HasOne

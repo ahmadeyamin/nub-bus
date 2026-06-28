@@ -1,6 +1,6 @@
 import { Head, Link, usePage, usePoll } from '@inertiajs/react';
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { login, register, dashboard, home } from '@/routes';
@@ -193,6 +193,16 @@ const createBusIcon = (status: 'running' | 'reached_stop') => {
         iconAnchor: [18, 18],
     });
 };
+
+// ── MapFlyTo: flies map to new center whenever route changes ─────────────────
+
+function MapFlyTo({ center }: { center: [number, number] }) {
+    const map = useMap();
+    useEffect(() => {
+        map.flyTo(center, 14, { duration: 1.2 });
+    }, [center[0], center[1]]);
+    return null;
+}
 
 // ── Main Component ───────────────────────────────────────────────────────────
 
@@ -644,6 +654,7 @@ export default function Tracking({ routes = [], buses = [] }: TrackingProps) {
                                 zoom={14}
                                 style={{ height: '100%', width: '100%', zIndex: 1 }}
                             >
+                                <MapFlyTo center={mapCenter} />
                                 <TileLayer
                                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

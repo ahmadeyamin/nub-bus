@@ -1,5 +1,5 @@
 import { Link, usePage, router } from '@inertiajs/react';
-import { Bus, ChevronDown, LayoutGrid, LogOut, MapPin, Menu, RouteIcon, Settings, User, X } from 'lucide-react';
+import { ArrowLeft, Bus, ChevronDown, LayoutGrid, LogOut, MapPin, Menu, RouteIcon, Settings, User, X } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -72,6 +72,15 @@ export function AppHeader() {
     return (
         <header className="sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800 bg-white/90 dark:bg-gray-950/90 backdrop-blur-md">
             <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4">
+
+                {/* Back button */}
+                <button
+                    onClick={() => window.history.back()}
+                    className="flex items-center justify-center w-8 h-8 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-colors flex-shrink-0"
+                    title="Go back"
+                >
+                    <ArrowLeft className="h-4 w-4" />
+                </button>
 
                 {/* Logo */}
                 <Link href={dashboard.url()} className="flex items-center gap-2.5 flex-shrink-0">

@@ -139,7 +139,14 @@ function TransitSchemaMap() {
 export default function Login({ status, canResetPassword }: Props) {
     const [activeRole, setActiveRole] = useState<
         'student' | 'driver' | 'admin'
-    >('student');
+    >(() => {
+        const params = new URLSearchParams(window.location.search);
+        const tab = params.get('tab');
+        if (tab === 'driver' || tab === 'admin' || tab === 'student') {
+            return tab;
+        }
+        return 'student';
+    });
 
     return (
         <div className="grid min-h-dvh bg-background lg:grid-cols-2">

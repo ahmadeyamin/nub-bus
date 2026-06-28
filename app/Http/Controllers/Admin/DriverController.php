@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class DriverController extends Controller
@@ -43,6 +44,10 @@ class DriverController extends Controller
                 'id' => $driver->id,
                 'name' => $driver->name,
                 'email' => $driver->email,
+                'avatar_url' => $driver->avatar_url,
+                'nid_number' => $driver->nid_number,
+                'phone' => $driver->phone,
+                'profile_locked' => $driver->profile_locked,
             ],
             'bus' => $bus ? [
                 'id' => $bus->id,
@@ -69,6 +74,9 @@ class DriverController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,'.$driver->id,
             'password' => 'nullable|string|min:8',
+            'avatar' => 'nullable|image|max:2048',
+            'nid_number' => 'nullable|string|max:30',
+            'phone' => 'nullable|string|max:20',
         ]);
 
         $data = [
@@ -78,6 +86,22 @@ class DriverController extends Controller
 
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
+        }
+
+        // Handle avatar upload
+        if ($request->hasFile('avatar')) {
+            // Delete old avatar if present
+            if ($driver->avatar) {
+                Storage::disk('public')->delete($driver->avatar);
+            }
+            $data['avatar'] = $request->file('avatar')->store('avatars', 'public');
+        }
+
+        // Profile identity fields — lock after saving
+        if ($request->has('nid_number') || $request->has('phone')) {
+            $data['nid_number'] = $request->nid_number;
+            $data['phone'] = $request->phone;
+            $data['profile_locked'] = true;
         }
 
         $driver->update($data);

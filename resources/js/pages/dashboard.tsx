@@ -8,11 +8,14 @@ import {
     Navigation,
     Play,
     RouteIcon,
+    ShieldCheck,
     TrendingUp,
     User,
+    Users,
+    X,
     Zap,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { index as routesIndex } from '@/routes/admin/routes';
 import { index as busesIndex } from '@/routes/admin/buses';
 import { index as driversIndex } from '@/routes/admin/drivers';
@@ -92,19 +95,111 @@ interface DriverStats {
     status: string; is_active: boolean; bus_id: number;
 }
 
+// ── Welcome modal ──────────────────────────────────────────────────────────
+const ROLE_MODAL_CONFIG = {
+    admin: {
+        icon: ShieldCheck,
+        label: 'Administrator',
+        gradient: 'linear-gradient(135deg,#d97706,#b45309)',
+        badge: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+        tip: '💡 Tip: Use the Quick Actions below to manage routes, buses, and drivers efficiently.',
+    },
+    driver: {
+        icon: Bus,
+        label: 'Driver',
+        gradient: 'linear-gradient(135deg,#059669,#047857)',
+        badge: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+        tip: '💡 Tip: Remember to start your trip from the Driver Panel before departing your first stop.',
+    },
+    student: {
+        icon: Users,
+        label: 'Student',
+        gradient: 'linear-gradient(135deg,#4f46e5,#7c3aed)',
+        badge: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400',
+        tip: '💡 Tip: Use the Live Tracking page to see real-time bus positions and ETAs to your stop.',
+    },
+};
+
+function WelcomeModal({ alert, onClose }: {
+    alert: { role: string; message: string };
+    onClose: () => void;
+}) {
+    const config = ROLE_MODAL_CONFIG[alert.role as keyof typeof ROLE_MODAL_CONFIG] ?? ROLE_MODAL_CONFIG.student;
+    const overlayRef = useRef<HTMLDivElement>(null);
+    const Icon = config.icon;
+
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+        document.addEventListener('keydown', onKey);
+        return () => document.removeEventListener('keydown', onKey);
+    }, [onClose]);
+
+    return (
+        <div
+            ref={overlayRef}
+            onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Welcome"
+        >
+            <div className="relative w-full max-w-md rounded-3xl overflow-hidden shadow-2xl bg-white dark:bg-gray-900 animate-in fade-in zoom-in-95 duration-200">
+                {/* Gradient header */}
+                <div className="px-6 py-8 text-white text-center relative" style={{ background: config.gradient }}>
+                    <button
+                        onClick={onClose}
+                        className="absolute top-4 right-4 p-1.5 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                        aria-label="Close"
+                    >
+                        <X className="h-4 w-4" />
+                    </button>
+                    <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/15">
+                        <Icon className="h-8 w-8" />
+                    </div>
+                    <div className="text-xs font-semibold uppercase tracking-widest opacity-80 mb-1">Welcome Back</div>
+                    <h2 className="text-2xl font-extrabold tracking-tight">{alert.role === 'admin' ? 'Administrator' : alert.role === 'driver' ? 'Driver' : 'Student'} Portal</h2>
+                </div>
+
+                {/* Body */}
+                <div className="px-6 py-6 space-y-4">
+                    <div className="flex items-start gap-3 rounded-2xl bg-gray-50 dark:bg-gray-800/50 p-4">
+                        <CheckCircle className="h-5 w-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{alert.message}</p>
+                    </div>
+                    <div className="flex items-start gap-3 rounded-2xl border border-dashed border-gray-200 dark:border-gray-700 p-4">
+                        <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{config.tip}</p>
+                    </div>
+                    <button
+                        onClick={onClose}
+                        className="w-full py-3 rounded-xl font-bold text-sm text-white transition-all hover:opacity-90 active:scale-[0.98] shadow-lg"
+                        style={{ background: config.gradient }}
+                    >
+                        Got it, let's go →
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 // ══════════════════════════════════════════════════════════════════════════
-export default function Dashboard({ stats, recent_buses, driver_stats, student_stats }: {
+export default function Dashboard({ stats, recent_buses, driver_stats, student_stats, driver_profile }: {
     stats?: AdminStats;
     recent_buses?: RecentBus[];
     driver_stats?: DriverStats | null;
     student_stats?: { total_routes: number; active_buses: number };
+    driver_profile?: { avatar_url: string | null; nid_number: string | null; phone: string | null; profile_locked: boolean } | null;
 }) {
-    const { auth } = usePage().props;
+    const { auth, flash } = usePage<{ flash?: { login_alert?: { role: string; message: string } | null } }>().props;
     const role = auth.user?.role;
+    const [showWelcome, setShowWelcome] = useState<boolean>(() => !!flash?.login_alert);
 
     return (
         <>
             <Head title="Dashboard" />
+            {showWelcome && flash?.login_alert && (
+                <WelcomeModal alert={flash.login_alert} onClose={() => setShowWelcome(false)} />
+            )}
             <div className="max-w-5xl mx-auto w-full space-y-8">
 
                 {/* ── Welcome ── */}
@@ -188,7 +283,7 @@ export default function Dashboard({ stats, recent_buses, driver_stats, student_s
 
                 {/* ══ DRIVER DASHBOARD ══════════════════════════════════════════════════ */}
                 {role === 'driver' && (
-                    <DriverDashboardContent stats={driver_stats ?? null} />
+                    <DriverDashboardContent stats={driver_stats ?? null} profile={driver_profile ?? null} />
                 )}
 
                 {/* ══ STUDENT DASHBOARD ══════════════════════════════════════════════════ */}
@@ -202,7 +297,7 @@ export default function Dashboard({ stats, recent_buses, driver_stats, student_s
 }
 
 // ── Driver section ─────────────────────────────────────────────────────────
-function DriverDashboardContent({ stats }: { stats: DriverStats | null }) {
+function DriverDashboardContent({ stats, profile }: { stats: DriverStats | null, profile?: { avatar_url: string | null; nid_number: string | null; phone: string | null; profile_locked: boolean } | null }) {
     const elapsed = useLiveTimer(stats?.trip_started_at ?? null, stats?.trip_status === 'on_trip');
     const tripActive = stats?.trip_status === 'on_trip';
     const progressPct = stats && stats.total_stops > 0
@@ -258,7 +353,7 @@ function DriverDashboardContent({ stats }: { stats: DriverStats | null }) {
                     </div>
                 )}
 
-                {tripActive && (
+        {tripActive && (
                     <div className="px-4 pb-5">
                         <div className="flex justify-between text-[10px] text-indigo-300 mb-1.5 uppercase tracking-wider">
                             <span>Progress</span>
@@ -271,6 +366,60 @@ function DriverDashboardContent({ stats }: { stats: DriverStats | null }) {
                     </div>
                 )}
             </div>
+
+            {/* Profile Info (Read-only) */}
+            {profile && (
+                <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-5">
+                    <div className="flex items-center gap-2 mb-4">
+                        <User className="h-4 w-4 text-indigo-500" />
+                        <h3 className="font-bold text-gray-900 dark:text-white">Profile Information</h3>
+                        {profile.profile_locked && (
+                            <span className="ml-auto flex items-center gap-1 text-[10px] font-semibold bg-gray-100 dark:bg-gray-800 text-gray-500 px-2 py-0.5 rounded-full">
+                                <Lock className="h-3 w-3" /> Locked by Admin
+                            </span>
+                        )}
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="flex items-center gap-3">
+                            {profile.avatar_url ? (
+                                <img src={profile.avatar_url} alt="Avatar" className="h-10 w-10 rounded-xl object-cover border border-gray-200 dark:border-gray-700" />
+                            ) : (
+                                <div className="h-10 w-10 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                                    <User className="h-5 w-5 text-gray-400" />
+                                </div>
+                            )}
+                            <div>
+                                <div className="text-[11px] text-gray-400 uppercase font-medium">Avatar</div>
+                                <div className="text-sm font-medium">{profile.avatar_url ? 'Uploaded' : 'Not set'}</div>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <div className="h-10 w-10 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                                <Phone className="h-5 w-5 text-gray-400" />
+                            </div>
+                            <div>
+                                <div className="text-[11px] text-gray-400 uppercase font-medium">Phone</div>
+                                <div className="text-sm font-medium">{profile.phone || <span className="italic text-gray-400">Not set</span>}</div>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-3 sm:col-span-2">
+                            <div className="h-10 w-10 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                                <CreditCard className="h-5 w-5 text-gray-400" />
+                            </div>
+                            <div>
+                                <div className="text-[11px] text-gray-400 uppercase font-medium">NID Number</div>
+                                <div className="text-sm font-medium">
+                                    {profile.nid_number ? (
+                                        <span>{profile.nid_number.slice(0, 4)}•••••••••</span>
+                                    ) : (
+                                        <span className="italic text-gray-400">Not set</span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Stats */}
             <div className="grid grid-cols-2 gap-3">

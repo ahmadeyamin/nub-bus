@@ -99,6 +99,12 @@ class DashboardController extends Controller
 
         return Inertia::render('dashboard', [
             'driver_stats' => $stats,
+            'driver_profile' => [
+                'avatar_url' => $user->avatar_url,
+                'nid_number' => $user->nid_number,
+                'phone' => $user->phone,
+                'profile_locked' => $user->profile_locked,
+            ],
         ]);
     }
 

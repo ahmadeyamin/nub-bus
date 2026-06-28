@@ -448,17 +448,17 @@ export default function StudentDashboard() {
                             <RoleCard
                                 title="Students"
                                 description="View live buses, ETA to your stop, route maps and personalized alerts."
-                                portalHref={login.url()}
+                                portalHref={`${login.url()}?tab=student`}
                             />
                             <RoleCard
                                 title="Drivers"
                                 description="Start a trip, share GPS automatically, mark delays and arrivals."
-                                portalHref={login.url()}
+                                portalHref={`${login.url()}?tab=driver`}
                             />
                             <RoleCard
                                 title="Admins"
                                 description="Manage fleet, routes, users and analyze ridership trends."
-                                portalHref={login.url()}
+                                portalHref={`${login.url()}?tab=admin`}
                             />
                         </div>
                     </div>
