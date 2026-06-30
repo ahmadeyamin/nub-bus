@@ -3,9 +3,12 @@ import {
     Bus,
     CheckCircle,
     Clock,
+    CreditCardIcon,
     Flag,
+    LockIcon,
     MapPin,
     Navigation,
+    PhoneIcon,
     Play,
     RouteIcon,
     ShieldCheck,
@@ -375,7 +378,7 @@ function DriverDashboardContent({ stats, profile }: { stats: DriverStats | null,
                         <h3 className="font-bold text-gray-900 dark:text-white">Profile Information</h3>
                         {profile.profile_locked && (
                             <span className="ml-auto flex items-center gap-1 text-[10px] font-semibold bg-gray-100 dark:bg-gray-800 text-gray-500 px-2 py-0.5 rounded-full">
-                                <Lock className="h-3 w-3" /> Locked by Admin
+                                <LockIcon className="h-3 w-3" /> Locked by Admin
                             </span>
                         )}
                     </div>
@@ -395,7 +398,7 @@ function DriverDashboardContent({ stats, profile }: { stats: DriverStats | null,
                         </div>
                         <div className="flex items-center gap-3">
                             <div className="h-10 w-10 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-                                <Phone className="h-5 w-5 text-gray-400" />
+                                <PhoneIcon className="h-5 w-5 text-gray-400" />
                             </div>
                             <div>
                                 <div className="text-[11px] text-gray-400 uppercase font-medium">Phone</div>
@@ -404,7 +407,7 @@ function DriverDashboardContent({ stats, profile }: { stats: DriverStats | null,
                         </div>
                         <div className="flex items-center gap-3 sm:col-span-2">
                             <div className="h-10 w-10 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-                                <CreditCard className="h-5 w-5 text-gray-400" />
+                                <CreditCardIcon className="h-5 w-5 text-gray-400" />
                             </div>
                             <div>
                                 <div className="text-[11px] text-gray-400 uppercase font-medium">NID Number</div>

@@ -1,4 +1,3 @@
-import { PageProps } from '@/types';
 import { Head, router } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -106,7 +105,7 @@ function StatCard({
 }
 
 // ── Main component ─────────────────────────────────────────────────────────
-export default function DriverDashboard({ bus, stats }: PageProps<{ bus: BusType | null; stats: Stats | null }>) {
+export default function DriverDashboard({ bus, stats }: { bus: BusType | null; stats: Stats | null }) {
     const [isLoading, setIsLoading] = useState(false);
     const elapsed = useLiveTimer(stats?.trip_started_at ?? null, stats?.trip_status === 'on_trip');
 

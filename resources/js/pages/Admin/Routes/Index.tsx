@@ -1,4 +1,3 @@
-import { PageProps } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,7 +14,7 @@ interface RouteType {
     buses_count: number;
 }
 
-export default function AdminRoutes({ routes }: PageProps<{ routes: RouteType[] }>) {
+export default function AdminRoutes({ routes }: { routes: RouteType[] }) {
     const [name, setName] = useState('');
     const [submitting, setSubmitting] = useState(false);
 

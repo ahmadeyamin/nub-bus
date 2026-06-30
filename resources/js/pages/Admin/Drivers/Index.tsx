@@ -1,4 +1,3 @@
-import { PageProps } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -27,7 +26,7 @@ interface DriverType {
 
 const DEFAULT_FORM = { name: '', email: '', password: '' };
 
-export default function AdminDrivers({ drivers }: PageProps<{ drivers: DriverType[] }>) {
+export default function AdminDrivers({ drivers }: { drivers: DriverType[] }) {
     const [form, setForm] = useState(DEFAULT_FORM);
     const [submitting, setSubmitting] = useState(false);
 

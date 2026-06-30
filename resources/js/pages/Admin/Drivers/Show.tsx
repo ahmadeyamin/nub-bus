@@ -1,4 +1,3 @@
-import { PageProps } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -87,7 +86,7 @@ function StatCard({ label, value, icon: Icon, color }: {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-export default function AdminDriverShow({ driver, bus }: PageProps<{ driver: DriverType; bus: BusInfo | null }>) {
+export default function AdminDriverShow({ driver, bus }: { driver: DriverType; bus: BusInfo | null }) {
     const [editing, setEditing] = useState(false);
     const [form, setForm] = useState({
         name: driver.name,
